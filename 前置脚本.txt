@@ -1,0 +1,28 @@
+// === SMS V2 CheckSum 自动生成 ===
+// 公式: CheckSum = SHA1(AppSecret + Nonce + CurTime) 小写 hex
+
+const appSecret = pm.environment.get('AppSecret');
+if (!appSecret) {
+    throw new Error('环境变量 appSecret 未配置');
+}
+
+// 1. CurTime: 当前 Unix 秒时间戳
+const curTime = Math.floor(Date.now() / 1000).toString();
+
+// 2. Nonce: 随机字符串（建议 8-32 位）
+const nonce = Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+
+// 3. 拼接 + SHA1
+//    CryptoJS.SHA1().toString() 默认输出小写 hex
+const checkSum = CryptoJS.SHA1(appSecret + nonce + curTime).toString();
+
+// 4. 写入变量（请求头 {{xxx}} 会引用这些）
+pm.environment.set('CurTime', curTime);
+pm.environment.set('Nonce', nonce);
+pm.environment.set('CheckSum', checkSum);
+
+// 5. 控制台打印，调试用（Apifox 控制台可见）
+console.log('curTime:', curTime);
+console.log('nonce:', nonce);
+console.log('checkSum:', checkSum);
+console.log('concatenated:', appSecret + nonce + curTime);
