@@ -176,7 +176,7 @@ def pytest_sessionfinish(session, exitstatus):
 
     report_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'reports')
     os.makedirs(report_dir, exist_ok=True)
-    report_file = os.path.join(report_dir, f'report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.html')
+    report_file = os.path.join(report_dir, 'report.html')
     with open(report_file, 'w', encoding='utf-8') as f:
         f.write(html)
     print(f'\n{"="*60}')

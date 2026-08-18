@@ -54,11 +54,13 @@ class TestSignature:
 
     @pytest.mark.order(2)
     def test_signature_real_name_update(self, client, interface_data):
-        """测试签名实名更新接口，signId 固定使用文件中的值"""
+        """测试签名实名更新接口，signId 固定使用 11950242"""
+        body = interface_data['signature']['real_name_update'].copy()
+        body['signId'] = 11950242
+
         response = run_case(
             self.test_results, client, '签名实名更新',
-            API_SIGNATURE_REAL_NAME_UPDATE,
-            interface_data['signature']['real_name_update'],
+            API_SIGNATURE_REAL_NAME_UPDATE, body,
         )
         assert response.get("code") == EXPECTED_CODE, (
             f"签名实名更新失败: code={response.get('code')}, msg={response.get('msg')}"
