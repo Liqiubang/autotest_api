@@ -33,4 +33,4 @@ API_TEMPLATE_DELETE = "/sms/v2/template/delete"
 EXPECTED_CODE = "000000"
 
 # 接口数据文件路径
-INTERFACE_DATA_FILE = r"C:\Users\15274\OneDrive\深度接口自动化.txt"
+INTERFACE_DATA_FILE = r"C:\Users\15274\OneDrive\自助通统一接口自动化.txt"
