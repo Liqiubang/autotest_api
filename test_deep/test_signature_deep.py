@@ -141,10 +141,28 @@ class TestSignature:
         assert sid is not None, f"签名新增v6未返回 id, response={response}"
         TestSignature.sig_v6_id = sid
 
+    # =================== 签名实名修改 ===================
+
     @pytest.mark.order(8)
+    def test_11_signature_real_name_modify_v3(self, client, interfaces):
+        """签名实名修改v3，id 取签名新增v6返回的 id"""
+        iface = interfaces[18]
+        body = iface['body'].copy()
+        if TestSignature.sig_v6_id is not None:
+            body['id'] = str(TestSignature.sig_v6_id)
+
+        response = run_case(
+            self.test_results_deep, client, '签名实名修改v3',
+            iface['url'], body,
+        )
+        assert response.get("code") == EXPECTED_CODE, (
+            f"签名实名修改v3失败: code={response.get('code')}, msg={response.get('msg')}"
+        )
+
+    @pytest.mark.order(9)
     def test_08_signature_delete_v1_6(self, client, interfaces):
         """签名删除v1-6，id 取签名新增v6返回的 id"""
-        iface = interfaces[18]
+        iface = interfaces[19]
         body = iface['body'].copy()
         if TestSignature.sig_v6_id is not None:
             body['id'] = str(TestSignature.sig_v6_id)
@@ -159,10 +177,10 @@ class TestSignature:
 
     # =================== 签名查询/列表 ===================
 
-    @pytest.mark.order(9)
+    @pytest.mark.order(10)
     def test_09_signature_query_v1(self, client, interfaces):
         """签名查询v1"""
-        iface = interfaces[19]
+        iface = interfaces[20]
         response = run_case(
             self.test_results_deep, client, '签名查询v1',
             iface['url'], iface['body'],
@@ -171,10 +189,10 @@ class TestSignature:
             f"签名查询v1失败: code={response.get('code')}, msg={response.get('msg')}"
         )
 
-    @pytest.mark.order(10)
+    @pytest.mark.order(11)
     def test_10_signature_list_v1(self, client, interfaces):
         """签名列表v1"""
-        iface = interfaces[20]
+        iface = interfaces[21]
         response = run_case(
             self.test_results_deep, client, '签名列表v1',
             iface['url'], iface['body'],
@@ -183,19 +201,7 @@ class TestSignature:
             f"签名列表v1失败: code={response.get('code')}, msg={response.get('msg')}"
         )
 
-    # =================== 签名实名修改 ===================
 
-    @pytest.mark.order(11)
-    def test_11_signature_real_name_modify_v3(self, client, interfaces):
-        """签名实名修改v3"""
-        iface = interfaces[21]
-        response = run_case(
-            self.test_results_deep, client, '签名实名修改v3',
-            iface['url'], iface['body'],
-        )
-        assert response.get("code") == EXPECTED_CODE, (
-            f"签名实名修改v3失败: code={response.get('code')}, msg={response.get('msg')}"
-        )
 
 
 if __name__ == '__main__':
