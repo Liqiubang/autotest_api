@@ -1,6 +1,6 @@
 import pytest
 
-from test_deep.config_deep import EXPECTED_CODE
+from test_deep.config_deep import EXPECTED_CODE, REAL_NAME_MODIFY_SIG_ID
 from test_deep.conftest import run_case
 from test_deep.deep_client import DeepClient
 from test_deep.deep_parser import parse_deep_interfaces
@@ -145,11 +145,10 @@ class TestSignature:
 
     @pytest.mark.order(8)
     def test_11_signature_real_name_modify_v3(self, client, interfaces):
-        """签名实名修改v3，id 取签名新增v6返回的 id"""
+        """签名实名修改v3，id 固定为 11950242（不依赖签名新增v6返回的 id）"""
         iface = interfaces[18]
         body = iface['body'].copy()
-        if TestSignature.sig_v6_id is not None:
-            body['id'] = str(TestSignature.sig_v6_id)
+        body['id'] = REAL_NAME_MODIFY_SIG_ID
 
         response = run_case(
             self.test_results_deep, client, '签名实名修改v3',

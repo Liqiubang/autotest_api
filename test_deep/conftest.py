@@ -5,8 +5,14 @@ from datetime import datetime
 from test_deep.config_deep import EXPECTED_CODE
 
 
-def run_case(results, client, name, url, body):
-    """执行单个深度接口用例并记录结果。返回响应 JSON。"""
+def run_case(results, client, name, url, body, expected_code=None):
+    """执行单个深度接口用例并记录结果。返回响应 JSON。
+
+    expected_code: 期望响应码，默认 EXPECTED_CODE（000000）。
+                   异常场景（如模板重复新增）可传入对应的业务码。
+    """
+    if expected_code is None:
+        expected_code = EXPECTED_CODE
     start_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     record = {
         'name': name,
@@ -25,7 +31,7 @@ def run_case(results, client, name, url, body):
         record['headers'] = headers
         record['body'] = req_body
         record['response'] = response
-        record['passed'] = response.get('code') == EXPECTED_CODE
+        record['passed'] = response.get('code') == expected_code
         results.append(record)
         return response
     except Exception as e:

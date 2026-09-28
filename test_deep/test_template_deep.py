@@ -1,6 +1,6 @@
 import pytest
 
-from test_deep.config_deep import EXPECTED_CODE
+from test_deep.config_deep import DUPLICATE_CODE, EXPECTED_CODE
 from test_deep.conftest import run_case
 from test_deep.deep_client import DeepClient
 from test_deep.deep_parser import parse_deep_interfaces
@@ -17,7 +17,7 @@ def interfaces():
 
 
 class TestTemplate:
-    """深度接口-模板管理模块-7个接口"""
+    """深度接口-模板管理模块-8个接口"""
 
     # 模板新增v3 返回的 id
     template_id = None
@@ -41,9 +41,22 @@ class TestTemplate:
         TestTemplate.template_id = tid
 
     @pytest.mark.order(2)
-    def test_02_template_edit_v3(self, client, interfaces):
-        """模板编辑v3，id 取模板新增v3返回的 id"""
+    def test_02_template_duplicate_add_v3(self, client, interfaces):
+        """模板重复新增v3，提交与模板新增v3相同的内容，期望返回重复码 000501"""
         iface = interfaces[23]
+        response = run_case(
+            self.test_results_deep, client, '模板重复新增v3',
+            iface['url'], iface['body'], expected_code=DUPLICATE_CODE,
+        )
+        assert response.get("code") == DUPLICATE_CODE, (
+            f"模板重复新增v3失败: 期望 code={DUPLICATE_CODE}, "
+            f"实际 code={response.get('code')}, msg={response.get('msg')}"
+        )
+
+    @pytest.mark.order(3)
+    def test_03_template_edit_v3(self, client, interfaces):
+        """模板编辑v3，id 取模板新增v3返回的 id"""
+        iface = interfaces[24]
         body = iface['body'].copy()
         if TestTemplate.template_id is not None:
             body['id'] = str(TestTemplate.template_id)
@@ -56,10 +69,10 @@ class TestTemplate:
             f"模板编辑v3失败: code={response.get('code')}, msg={response.get('msg')}"
         )
 
-    @pytest.mark.order(3)
-    def test_03_template_query_v1(self, client, interfaces):
+    @pytest.mark.order(4)
+    def test_04_template_query_v1(self, client, interfaces):
         """模板查询v1，id 取模板新增v3返回的 id"""
-        iface = interfaces[24]
+        iface = interfaces[25]
         body = iface['body'].copy()
         if TestTemplate.template_id is not None:
             body['id'] = str(TestTemplate.template_id)
@@ -72,10 +85,10 @@ class TestTemplate:
             f"模板查询v1失败: code={response.get('code')}, msg={response.get('msg')}"
         )
 
-    @pytest.mark.order(4)
-    def test_04_template_list_v1(self, client, interfaces):
+    @pytest.mark.order(5)
+    def test_05_template_list_v1(self, client, interfaces):
         """模板列表v1"""
-        iface = interfaces[25]
+        iface = interfaces[26]
         response = run_case(
             self.test_results_deep, client, '模板列表v1',
             iface['url'], iface['body'],
@@ -84,10 +97,10 @@ class TestTemplate:
             f"模板列表v1失败: code={response.get('code')}, msg={response.get('msg')}"
         )
 
-    @pytest.mark.order(5)
-    def test_05_template_query_type_enum_v1(self, client, interfaces):
+    @pytest.mark.order(6)
+    def test_06_template_query_type_enum_v1(self, client, interfaces):
         """模板枚举查询v1"""
-        iface = interfaces[26]
+        iface = interfaces[27]
         response = run_case(
             self.test_results_deep, client, '模板枚举查询v1',
             iface['url'], iface['body'],
@@ -96,10 +109,10 @@ class TestTemplate:
             f"模板枚举查询v1失败: code={response.get('code')}, msg={response.get('msg')}"
         )
 
-    @pytest.mark.order(6)
-    def test_06_template_update_link_material_v1(self, client, interfaces):
+    @pytest.mark.order(7)
+    def test_07_template_update_link_material_v1(self, client, interfaces):
         """模板更新引流材料v1，id 取模板新增v3返回的 id"""
-        iface = interfaces[27]
+        iface = interfaces[28]
         body = iface['body'].copy()
         if TestTemplate.template_id is not None:
             body['id'] = str(TestTemplate.template_id)
@@ -112,10 +125,10 @@ class TestTemplate:
             f"模板更新引流材料v1失败: code={response.get('code')}, msg={response.get('msg')}"
         )
 
-    @pytest.mark.order(7)
-    def test_07_template_delete_v1(self, client, interfaces):
+    @pytest.mark.order(8)
+    def test_08_template_delete_v1(self, client, interfaces):
         """模板删除v1，id 取模板新增v3返回的 id"""
-        iface = interfaces[28]
+        iface = interfaces[29]
         body = iface['body'].copy()
         if TestTemplate.template_id is not None:
             body['id'] = str(TestTemplate.template_id)
